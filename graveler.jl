@@ -28,6 +28,8 @@ end
 let
   n = Int(1e9)
   chunk_size = n ÷ num_procs
+  chunks = fill(chunk_size, num_procs)
+  chunks[end] += n % num_procs
   @time values = Distributed.pmap(roll_chunk, fill(chunk_size, num_procs))
   max_ones, num_rolls = Iterators.reduce(reduce_chunk_sums, values)
   println("Max ones: $max_ones")
